@@ -1,0 +1,21 @@
+{
+    "manifest_version": 2,
+    "name": "Context menu search",
+    "version": "1.0",
+    "author": "bam",
+    "description": "Adds a context menu item to provide the search of the selected text with Google.",
+    "icons": {
+        "16": "icons/ic_search_black_24dp_1x.png",
+        "24": "icons/ic_search_black_24dp_1x.png",
+        "48": "icons/ic_search_black_24dp_2x.png"
+    },
+    "permissions": [
+        "contextMenus"
+    ],
+    "background": {
+        "scripts": [
+            "src/background.js"
+        ],
+        "persistent": true
+    }
+}
