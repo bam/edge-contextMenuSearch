@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Context menu search",
-    "version": "1.0",
+    "version": "1.0.0",
     "author": "bam",
     "description": "Adds a context menu item to provide the search of the selected text with Google.",
     "icons": {
