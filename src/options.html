@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Context menu search extension's options</title>
+        <script src="options.js"></script>
+    </head>
+    <body style="font-family: Segoe UI, sans-serif">
+        <h1>Context menu search extension's options</h1>
+        <label for="searchprovider">Search provider</label>
+        <select name="searchprovider" id="searchprovider" title="Search provider"></select>
+
+        <h2>Add custom provider</h2>
+
+        <form action="" name="newprovider">
+            <label for="providername">Provider name</label>
+            <input type="text" id="providername" />
+            <label for="querystring">Query string</label>
+            <input type="text" id="querystring" />
+            <button form="newprovider" id="addbutton" type="button">Add</button>
+        </form>
+        <br />
+        <div id=providerslist></div>
+        <hr />
+        <small>Note: sorry, but you cannot delete or edit single provider meanwhile. Reset to defaults will delete all custom providers.</small>
+        <br />
+        <button id="resetbutton" type="button">Reset to defaults</button>
+    </body>
+</html>
