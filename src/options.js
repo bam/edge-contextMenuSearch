@@ -31,6 +31,9 @@ function resetCustomProviders() {
             document.getElementById('searchprovider').innerText = '';
             // TODO current provider global(external) constant
             initSelect(providers, 'google');
+            browser.contextMenus.update('contextSearch', {
+                title: `Search with ${providers.google.name}: "%s"`,
+            })
         })
     })
 }
@@ -64,7 +67,7 @@ function initSelect(providers, currentProvider) {
 
     // TODO better iterating over object?
     for (let p in providers) {
-        if (list.hasOwnProperty(p)) {
+        if (providers.hasOwnProperty(p)) {
             select.appendChild(createOption(p, providers[p].name));
         }
     }
