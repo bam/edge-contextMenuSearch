@@ -25,6 +25,19 @@ function setDefaultProviders() {
     })
 }
 
+function createGotoMenu(scheme, url) {
+    browser.contextMenus.create({
+        id: 'contextGoto',
+        title: `Go to: "${scheme}${url}"`,
+        contexts: ['selection', 'link'],
+        onclick: function () {
+            browser.tabs.create({
+                url: `${scheme}${url}`
+            })
+        }
+    })
+}
+
 function init() {
     browser.storage.local.get(null, function (result) {
         const currentProvider = result.providers[result.currentProvider]
@@ -44,5 +57,21 @@ function init() {
         })
     })
 }
+
+if (!window.browser) window.browser = chrome; // Compatibility for Chrome
+
+browser.runtime.onMessage.addListener(function (msg) {
+    var urlWithSchemeRegexp = /^(?:[a-z]+:)(?:\/\/)?(?:(?:\S+(?::\S*)?@)?(?:(?:[a-z]+[a-z\d-]*(?:\.[a-z]+[a-z\d-]*)+)|(?:\d{1,3}(?:\.\d{1,3}){3}))(?::\d+)?)?(?:(?:\/[^\/\s#?]+)+\/?|\/)?(?:\?[^#\s]*)?(?:#[^\s]*)?$/gi;
+    var urlWithHostnameRegexp = /^(?:(?:\S+(?::\S*)?@)?(?:(?:[a-z]+[a-z\d-]*(?:\.[a-z]+[a-z\d-]*)+)|(?:\d{1,3}(?:\.\d{1,3}){3}))(?::\d+)?)(?:(?:\/[^\/\s#?]+)+\/?|\/)?(?:\?[^#\s]*)?(?:#[^\s]*)?$/gi;
+    var msgForTest = msg.trim().toLowerCase();
+
+    browser.contextMenus.remove('contextGoto')
+
+    if (urlWithSchemeRegexp.test(msgForTest)) {
+        createGotoMenu('', msgForTest);
+    } else if (urlWithHostnameRegexp.test(msgForTest)) {
+        createGotoMenu('https://', msgForTest) // TODO use default scheme from settings 
+    }
+})
 
 setDefaultProviders();
