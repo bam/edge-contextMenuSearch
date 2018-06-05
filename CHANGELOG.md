@@ -1,4 +1,8 @@
 # Changelog
+## v.1.2.1 (Jun 5, 2018)
+Fixed
+- Opens multiple tabs after click on menu item
+
 ## v.1.2.0 (Mar 7, 2018)
 Added:
 - URL detection
