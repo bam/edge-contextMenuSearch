@@ -1,6 +1,13 @@
 {
     "extends": "airbnb-base",
+    "globals": {
+        "browser": true,
+        "window": true,
+        "chrome": true,
+        "document": true
+    },
     "rules": {
-        "linebreak-style": "off"
+        "linebreak-style": "off",
+        "no-undef": "warn"
     }
 }
