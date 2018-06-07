@@ -18,11 +18,13 @@ function init() {
   });
 }
 
-function setDefaultProviders() {
+function setDefaultStoreValues() {
   browser.storage.local.get(null, (res) => {
     const result = res;
+    let shouldUpdate;
 
     if (!result.providers) {
+      shouldUpdate = true;
       result.providers = {
         // TODO refactor string constants; move list of default providers to external module?
         google: {
@@ -40,10 +42,17 @@ function setDefaultProviders() {
       };
     }
     if (!result.currentProvider) {
+      shouldUpdate = true;
       result.currentProvider = 'google';
     }
+    if (!result.defaultProtocol) {
+      shouldUpdate = true;
+      result.defaultProtocol = 'https://';
+    }
 
-    browser.storage.local.set(result, init);
+    if (shouldUpdate) {
+      browser.storage.local.set(result, init);
+    } else init();
   });
 }
 
@@ -76,9 +85,12 @@ if (!window.browser) window.browser = chrome; // Compatibility for Chrome
 browser.runtime.onMessage.addListener((msg) => {
   if (msg) {
     browser.storage.local.get(null, (result) => {
-      const currentProvider = result.providers[result.currentProvider];
-
-      const isGotoEnabled = result.gotoEnabled;
+      const {
+        defaultProtocol,
+        gotoEnabled: isGotoEnabled,
+        providers,
+      } = result;
+      const currentProvider = providers[result.currentProvider];
 
       const urlWithSchemeRegexp = /^(?:[a-z]+:)(?:\/\/)?(?:(?:\S+(?::\S*)?@)?(?:(?:[a-z]+[a-z\d-]*(?:\.[a-z]+[a-z\d-]*)+)|(?:\d{1,3}(?:\.\d{1,3}){3}))(?::\d+)?)?(?:(?:\/[^/\s#?]+)+\/?|\/)?(?:\?[^#\s]*)?(?:#[^\s]*)?$/gi;
       const urlWithHostnameRegexp = /^(?:(?:\S+(?::\S*)?@)?(?:(?:[a-z]+[a-z\d-]*(?:\.[a-z]+[a-z\d-]*)+)|(?:\d{1,3}(?:\.\d{1,3}){3}))(?::\d+)?)(?:(?:\/[^/\s#?]+)+\/?|\/)?(?:\?[^#\s]*)?(?:#[^\s]*)?$/gi;
@@ -107,9 +119,9 @@ browser.runtime.onMessage.addListener((msg) => {
       } else if (urlWithHostnameRegexp.test(msgForTest)) {
         if (isGotoEnabled) {
           // TODO use default scheme from settings
-          updateGotoMenu('https://', msgForTest);
+          updateGotoMenu(defaultProtocol, msgForTest);
         } else {
-          createGotoMenu('https://', msgForTest);
+          createGotoMenu(defaultProtocol, msgForTest);
           browser.storage.local.set({ gotoEnabled: true });
         }
       } else {
@@ -124,4 +136,4 @@ browser.runtime.onMessage.addListener((msg) => {
   }
 });
 
-setDefaultProviders();
+setDefaultStoreValues();

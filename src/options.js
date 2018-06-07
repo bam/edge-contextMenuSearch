@@ -102,6 +102,17 @@ function addProvider() {
   }
 }
 
+function changeProtocol() {
+  browser.storage.local.set({ defaultProtocol: this.value });
+}
+
+function initProtocol(protocol) {
+  const select = document.getElementById('protocol');
+
+  select.value = protocol;
+  select.addEventListener('change', changeProtocol);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   browser.storage.local.get(null, (result) => {
     const providersListEl = document.getElementById('providerslist');
@@ -112,5 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('searchprovider').addEventListener('change', changeProvider);
     document.getElementById('addbutton').addEventListener('click', addProvider);
     document.getElementById('resetbutton').addEventListener('click', resetCustomProviders);
+
+    initProtocol(result.defaultProtocol);
   });
 });

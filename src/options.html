@@ -1,29 +1,41 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Context menu search extension's options</title>
-        <script src="options.js"></script>
-    </head>
-    <body style="font-family: Segoe UI, sans-serif">
-        <h1>Context menu search extension's options</h1>
-        <label for="searchprovider">Search provider</label>
-        <select name="searchprovider" id="searchprovider" title="Search provider"></select>
 
-        <h2>Add custom provider</h2>
+<head>
+    <meta charset="utf-8" />
+    <title>Context menu search extension's options</title>
+    <script src="options.js"></script>
+</head>
 
-        <form action="" name="newprovider">
-            <label for="providername">Provider name</label>
-            <input type="text" id="providername" />
-            <label for="querystring">Query string</label>
-            <input type="text" id="querystring" />
-            <button form="newprovider" id="addbutton" type="button">Add</button>
-        </form>
-        <br />
-        <div id=providerslist></div>
-        <hr />
-        <small>Note: sorry, but you cannot delete or edit single provider meanwhile. Reset to defaults will delete all custom providers.</small>
-        <br />
-        <button id="resetbutton" type="button">Reset to defaults</button>
-    </body>
+<body style="font-family: Segoe UI, sans-serif">
+    <h1>Context menu search extension's options</h1>
+
+    <h2>Search</h2>
+    <label for="searchprovider">Search provider</label>
+    <select name="searchprovider" id="searchprovider" title="select search provider"></select>
+
+    <h3>Add custom provider</h3>
+
+    <form action="" name="newprovider">
+        <label for="providername">Provider name</label>
+        <input type="text" id="providername" title="type provider name" />
+        <label for="querystring">Query string</label>
+        <input type="text" id="querystring" title="type query string" />
+        <button form="newprovider" id="addbutton" type="button">Add</button>
+    </form>
+    <br />
+    <div id=providerslist></div>
+    <hr />
+    <small>Note: sorry, but you cannot delete or edit single provider meanwhile. Reset to defaults will delete all custom providers.</small>
+    <br />
+    <button id="resetbutton" type="button">Reset to defaults</button>
+
+    <h2>Goto menu item</h2>
+    <label for="protocol">Default protocol</label>
+    <select name="protocol" id="protocol" title="select default protocol">
+        <option value="https://">https://</option>
+        <option value="http://">http://</option>
+    </select>
+</body>
+
 </html>
