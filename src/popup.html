@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Context menu search options</title>
+    <script src="popup.js"></script>
+</head>
+
+<body style="max-width: 400px; min-width: 300px; font-family: Segoe UI, sans-serif">
+    <h3>Context menu search options</h3>
+
+    <h4>Search</h4>
+    <label for="searchprovider">Search provider</label>
+    <select name="searchprovider" id="searchprovider" title="select search provider"></select>
+
+    <h4>Goto menu item</h4>
+    <label for="protocol">Default protocol</label>
+    <select name="protocol" id="protocol" title="select default protocol" style="margin-bottom: 20px">
+        <option value="https://">https://</option>
+        <option value="http://">http://</option>
+    </select>
+</body>
+
+</html>

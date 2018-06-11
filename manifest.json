@@ -29,5 +29,13 @@
             ]
         }
     ],
+    "browser_action": {
+        "default_icon": {
+            "25": "icons/ic_search_black_24dp_1x.png",
+            "40": "icons/ic_search_black_24dp_2x.png"
+        },
+        "default_title": "Context menu search settings",
+        "default_popup": "src/popup.html"
+    },
     "options_page": "src/options.html"
 }
