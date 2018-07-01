@@ -100,7 +100,7 @@ browser.runtime.onMessage.addListener((msg) => {
         title: `Search with ${currentProvider.name}: ${msg}`,
         contexts: ['selection', 'link'],
         onclick() {
-          const query = msg.trim().replace(/\s/gi, '+');
+          const query = encodeURIComponent(msg.trim()); // .replace(/\s/gi, '+');
           browser.storage.local.get(null, (res) => {
             browser.tabs.create({
               url: `${res.providers[res.currentProvider].url}${query}`,
