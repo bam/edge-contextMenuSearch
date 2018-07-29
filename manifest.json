@@ -1,9 +1,10 @@
 {
     "manifest_version": 2,
-    "name": "Context menu search",
+    "name": "__MSG_extensionName__",
     "version": "1.2.1",
     "author": "bam",
-    "description": "Adds a context menu item to provide the search of the selected text with Google.",
+    "default_locale": "en",
+    "description": "__MSG_extensionDescription__",
     "icons": {
         "16": "icons/ic_search_black_24dp_1x.png",
         "24": "icons/ic_search_black_24dp_1x.png",
@@ -34,7 +35,7 @@
             "25": "icons/ic_search_black_24dp_1x.png",
             "40": "icons/ic_search_black_24dp_2x.png"
         },
-        "default_title": "Context menu search settings",
+        "default_title": "__MSG_browserActionTitle__",
         "default_popup": "src/popup.html"
     },
     "options_page": "src/options.html"

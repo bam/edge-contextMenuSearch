@@ -1,0 +1,22 @@
+{
+  "extensionName": {
+    "message": "Context menu search",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Adds a context menu item to provide the search of the selected text with Google or any other search provider.",
+    "description": "Description of the extension."
+  },
+  "browserActionTitle": {
+    "message": "Context menu search options",
+    "description": "Title for browser action button"
+  },
+  "searchWith": {
+    "message": "Search with",
+    "description": "Static text in context menu to prefix provider's name"
+  },
+  "goTo": {
+    "message": "Go to",
+    "description": "Static text in context menu to prefix URL to go to"
+  }
+}

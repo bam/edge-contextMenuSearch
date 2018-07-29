@@ -44,7 +44,7 @@ function resetCustomProviders() {
       // TODO current provider global(external) constant
       initSelect(providers, 'google');
       browser.contextMenus.update('contextSearch', {
-        title: `Search with ${providers.google.name}: "%s"`,
+        title: `${browser.i18n.getMessage('searchWith')} ${providers.google.name}: "%s"`,
       });
     });
   });
@@ -56,7 +56,7 @@ function changeProvider() {
       const currentProvider = result.providers[this.value];
 
       browser.contextMenus.update('contextSearch', {
-        title: `Search with ${currentProvider.name}: "%s"`,
+        title: `${browser.i18n.getMessage('searchWith')} ${currentProvider.name}: "%s"`,
       });
     });
   });

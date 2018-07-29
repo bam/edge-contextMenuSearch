@@ -4,7 +4,7 @@ function init() {
 
     browser.contextMenus.create({ // TODO Refactor move function outside
       id: 'contextSearch',
-      title: `Search with ${currentProvider.name}: "%s"`,
+      title: `${browser.i18n.getMessage('searchWith')} ${currentProvider.name}: "%s"`,
       contexts: ['selection'],
       onclick(event) {
         const query = event.selectionText.trim().replace(/\s/gi, '+');
@@ -59,7 +59,7 @@ function setDefaultStoreValues() {
 function createGotoMenu(scheme, url) {
   browser.contextMenus.create({
     id: 'contextGoto',
-    title: `Go to: "${scheme}${url}"`,
+    title: `${browser.i18n.getMessage('goTo')}: "${scheme}${url}"`,
     contexts: ['selection', 'link'],
     onclick() {
       browser.tabs.create({
@@ -70,7 +70,7 @@ function createGotoMenu(scheme, url) {
 }
 function updateGotoMenu(scheme, url) {
   browser.contextMenus.update('contextGoto', {
-    title: `Go to: "${scheme}${url}"`,
+    title: `${browser.i18n.getMessage('goTo')}: "${scheme}${url}"`,
     contexts: ['selection', 'link'],
     onclick() {
       browser.tabs.create({
@@ -97,10 +97,10 @@ browser.runtime.onMessage.addListener((msg) => {
       const msgForTest = msg.trim().toLowerCase();
 
       browser.contextMenus.update('contextSearch', { // TODO Refactor move function outsides
-        title: `Search with ${currentProvider.name}: ${msg}`,
+        title: `${browser.i18n.getMessage('searchWith')} ${currentProvider.name}: ${msg}`,
         contexts: ['selection', 'link'],
         onclick() {
-          const query = encodeURIComponent(msg.trim()); // .replace(/\s/gi, '+');
+          const query = encodeURIComponent(msg.trim());
           browser.storage.local.get(null, (res) => {
             browser.tabs.create({
               url: `${res.providers[res.currentProvider].url}${query}`,

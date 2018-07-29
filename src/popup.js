@@ -23,7 +23,7 @@ function changeProvider() {
       const currentProvider = result.providers[this.value];
 
       browser.contextMenus.update('contextSearch', {
-        title: `Search with ${currentProvider.name}: "%s"`,
+        title: `${browser.i18n.getMessage('searchWith')} ${currentProvider.name}: "%s"`,
       });
     });
   });
