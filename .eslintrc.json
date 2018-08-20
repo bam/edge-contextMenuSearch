@@ -10,7 +10,7 @@
         "linebreak-style": "off",
         "no-undef": "warn",
         "max-len": [
-            "error",
+            "warn",
             100,
             2,
             {
