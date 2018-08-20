@@ -1,3 +1,5 @@
+if (!window.browser) window.browser = chrome; // Compatibility for Chrome
+
 // TODO refactor now all this code is partial copy from options.js. Use common functions from imported file.
 function createOption(value, text) {
   const el = document.createElement('option');
