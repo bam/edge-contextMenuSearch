@@ -1,3 +1,5 @@
+if (!window.browser) window.browser = chrome; // Compatibility for Chrome
+
 function createOption(value, text) {
   const el = document.createElement('option');
 
