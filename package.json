@@ -17,9 +17,10 @@
     "microsoft-edge",
     "browser-extension",
     "edge-extension",
-    "extension"
+    "extension",
+    "search'in"
   ],
-  "author": "Andrej Bourgasov",
+  "author": "Andrej (bam) Bourgasov",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bam/edge-contextMenuSearch/issues"

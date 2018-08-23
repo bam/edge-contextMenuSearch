@@ -1,4 +1,4 @@
-# edge-contextMenuSearch
+# Search'in
 This is an extension for Microsoft Edge browser. Extension adds context menu item when there is selected text on the page and provides an ability to search this text with search engine.
 #### Features
 - right-click (context menu) item in browser

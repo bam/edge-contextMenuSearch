@@ -1,6 +1,6 @@
 {
   "extensionName": {
-    "message": "Context menu search",
+    "message": "Search'in",
     "description": "Name of the extension."
   },
   "extensionDescription": {
@@ -8,7 +8,7 @@
     "description": "Description of the extension."
   },
   "browserActionTitle": {
-    "message": "Configuraciones de Context menu search",
+    "message": "Configuraciones de Search'in",
     "description": "Title for browser action button"
   },
   "searchWith": {
