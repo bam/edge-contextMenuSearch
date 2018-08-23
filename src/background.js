@@ -98,6 +98,10 @@ function updateLocals(settings) {
 }
 
 function onStorageChange(changes) {
+  const locals = window.contextMenuSearchLocals;
+  const { lastMsg } = locals;
+
+  locals.lastMsg += 'changed';
   // TODO think to remove eslint ignore comments
   delete changes.providers;// eslint-disable-line
 
@@ -105,9 +109,11 @@ function onStorageChange(changes) {
     browser.storage.local.get('providers', (res) => {
       changes.currentProvider = { newValue: res.providers[changes.currentProvider.newValue] };// eslint-disable-line
       updateLocals(changes);
+      handleMessage(lastMsg);
     });
   } else {
     updateLocals(changes);
+    handleMessage(lastMsg);
   }
 }
 
