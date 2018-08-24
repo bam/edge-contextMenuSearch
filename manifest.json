@@ -6,9 +6,10 @@
     "default_locale": "en",
     "description": "__MSG_extensionDescription__",
     "icons": {
-        "16": "icons/ic_search_black_24dp_1x.png",
-        "24": "icons/ic_search_black_24dp_1x.png",
-        "48": "icons/ic_search_black_24dp_2x.png"
+        "16": "icons/searchin_20px.png",
+        "48": "icons/searchin_48px.png",
+        "128": "icons/searchin_128px.png",
+        "176": "icons/searchin_176px.png"
     },
     "permissions": [
         "contextMenus",
@@ -34,8 +35,8 @@
     ],
     "browser_action": {
         "default_icon": {
-            "25": "icons/ic_search_black_24dp_1x.png",
-            "40": "icons/ic_search_black_24dp_2x.png"
+            "20": "icons/searchin_20px.png",
+            "40": "icons/searchin_40px.png"
         },
         "default_title": "__MSG_browserActionTitle__",
         "default_popup": "src/popup.html"
