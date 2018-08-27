@@ -6,7 +6,7 @@
     "default_locale": "en",
     "description": "__MSG_extensionDescription__",
     "icons": {
-        "16": "icons/searchin_20px.png",
+        "16": "icons/searchin_40px.png",
         "48": "icons/searchin_48px.png",
         "128": "icons/searchin_128px.png",
         "176": "icons/searchin_176px.png"
@@ -35,7 +35,6 @@
     ],
     "browser_action": {
         "default_icon": {
-            "20": "icons/searchin_20px.png",
             "40": "icons/searchin_40px.png"
         },
         "default_title": "__MSG_browserActionTitle__",
