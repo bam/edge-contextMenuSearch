@@ -1,17 +1,17 @@
 # Changelog
 ## v.1.3.0 (Sep 2, 2018)
 It's the first release which will be published to the official Microsoft Store. So from this moment you don't need to download source code and sideload in the browser. [Install it directly from store]().  
-In technical part has been made architecture change: some asynchronous callbacks have been substituted  usual functions with global vars. And now "data flow" is more synchronous, predictable and UI updated in time. 
+In technical part has been made architecture change: some asynchronous callbacks have been substituted usual functions with global vars. And now "data flow" is more synchronous, predictable and UI reacts faster to changes. 
 
 Added:
-- Icons
+- New icons
 - Localization for English, Russian, Spanish
 - Select text in inputs and iframes
-- Default scheme for "Goto" feature if detected URL has no scheme
+- Default scheme for "Go to" feature if detected URL has no scheme
 - Button for toolbar (browser action) to open settings pop-up
 
 Fixed:
-- [bugs fixed in v.1.3.0]()
+- [bugs fixed in v.1.3.0](https://github.com/bam/edge-contextMenuSearch/issues?utf8=%E2%9C%93&q=is:issue+is:closed+label:bug+milestone:1.3.0)
 
 ## v.1.2.1 (Jun 5, 2018)
 Fixed:
