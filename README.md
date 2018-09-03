@@ -1,7 +1,7 @@
 # Search'in
 
 This is an extension for Microsoft Edge browser.
-### [Official download from Microsoft Store]()
+### [Official download from Microsoft Store](https://www.microsoft.com/store/apps/9NZ9THH1RS1X)
 Search'in adds context menu item for the selected text on the page and provides an ability to search this text with chosen search engine.
 
 #### [Demo](https://raw.githubusercontent.com/bam/edge-contextMenuSearch/master/release/demo.gif)

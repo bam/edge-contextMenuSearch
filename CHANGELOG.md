@@ -1,6 +1,6 @@
 # Changelog
 ## v1.3.0 (Sep 2, 2018)
-It's the first release which will be published to the official Microsoft Store. So from this moment you don't need to download source code and sideload in the browser. [Install it directly from store]().  
+It's the first release which will be published to the official Microsoft Store. So from this moment you don't need to download source code and sideload in the browser. [Install it directly from store](https://www.microsoft.com/store/apps/9NZ9THH1RS1X).  
 In technical part has been made architecture change: some asynchronous callbacks have been substituted usual functions with global vars. And now "data flow" is more synchronous, predictable and UI reacts faster to changes. 
 
 Added:
