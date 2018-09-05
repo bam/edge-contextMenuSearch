@@ -1,6 +1,25 @@
 {
     "extends": "airbnb-base",
+    "globals": {
+        "browser": true,
+        "window": true,
+        "chrome": true,
+        "document": true
+    },
     "rules": {
-        "linebreak-style": "off"
+        "linebreak-style": "off",
+        "no-undef": "warn",
+        "max-len": [
+            "warn",
+            100,
+            2,
+            {
+                "ignoreUrls": true,
+                "ignoreComments": true,
+                "ignoreRegExpLiterals": true,
+                "ignoreStrings": true,
+                "ignoreTemplateLiterals": true
+            }
+        ]
     }
 }

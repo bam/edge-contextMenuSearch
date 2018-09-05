@@ -1,14 +1,21 @@
-# edge-contextMenuSearch
-This is an extension for Microsoft Edge browser. Extension adds context menu item when there is selected text on the page and provides an ability to search this text with search engine.
+# Search'in
+
+This is an extension for Microsoft Edge browser.
+### [Official download from Microsoft Store](https://www.microsoft.com/store/apps/9NZ9THH1RS1X)
+Search'in adds context menu item for the selected text on the page and provides an ability to search this text with chosen search engine.
+
+#### [Demo](https://raw.githubusercontent.com/bam/edge-contextMenuSearch/master/release/demo.gif)
+
 #### Features
 - right-click (context menu) item in browser
-- search selected text in choosen search engine (selection in links supported too)
+- search selected text with chosen search engine (selection in links, input and iframes supported too)
 - 3 default search engines: Google, Bing, Yandex
 - add your own url of the search engine (see options page)
-- detect URL in selection and adds context menu "Go to: ..." with provides navigation to selected URL
+- detects URL in selection and adds context menu "Go to: ..." which provides navigation to selected URL
 
-For now that's all. But while Edge lacks the search via right-click I hope it helps.
+Currently extension supports 3 languages: English, Russian and Spanish.  
+If you're native of the one of the listed languages and see a mistake in localization, feel free to contact me and we will correct it!
 
-For feature request create an issue and it will be reviewed and processed ;)
+Feel free to create issues to provide feedback, make a feature request or ask me anything.
 
-## [How to install extension to the browser?](https://docs.microsoft.com/en-us/microsoft-edge/extensions/guides/adding-and-removing-extensions)
+### [How to install extension to the browser from source code?](https://docs.microsoft.com/en-us/microsoft-edge/extensions/guides/adding-and-removing-extensions)

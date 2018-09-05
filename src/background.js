@@ -1,125 +1,184 @@
-function setDefaultProviders() {
-  browser.storage.local.get(null, function (result) {
+function init(initSettings) {
+  const settings = initSettings || {};
+
+  // TODO use constant for name
+  window.contextMenuSearchLocals = {
+    currentProvider: settings.providers[settings.currentProvider],
+    defaultProtocol: settings.defaultProtocol,
+    urlDetected: false,
+  };
+
+  const locals = window.contextMenuSearchLocals;
+
+  browser.contextMenus.create({ // TODO Refactor move function outside
+    id: 'contextSearch',
+    title: `${browser.i18n.getMessage('searchWith')} ${locals.currentProvider.name}: "%s"`,
+    contexts: ['selection'],
+    onclick(event) {
+      const query = event.selectionText.trim().replace(/\s/gi, '+');
+
+      browser.tabs.create({
+        url: `${locals.currentProvider.url}${query}`,
+      });
+    },
+  });
+}
+
+function setDefaultStoreValues() {
+  browser.storage.local.get(null, (res) => {
+    const result = res;
+    let shouldUpdate;
+
     if (!result.providers) {
+      shouldUpdate = true;
       result.providers = {
         // TODO refactor string constants; move list of default providers to external module?
         google: {
           name: 'Google',
-          url: 'https://www.google.com/search?q='
+          url: 'https://www.google.com/search?q=',
         },
         yandex: {
           name: 'Yandex',
-          url: 'https://www.yandex.ru/search/?text='
+          url: 'https://www.yandex.ru/search/?text=',
         },
         bing: {
           name: 'Bing',
-          url: 'http://www.bing.com/search?q='
-        }
-      }
+          url: 'http://www.bing.com/search?q=',
+        },
+      };
     }
     if (!result.currentProvider) {
-      result.currentProvider = 'google'
+      shouldUpdate = true;
+      result.currentProvider = 'google';
+    }
+    if (!result.defaultProtocol) {
+      shouldUpdate = true;
+      result.defaultProtocol = 'https://';
     }
 
-    browser.storage.local.set(result, init);
-  })
+    if (shouldUpdate) {
+      browser.storage.local.set(result, () => {
+        init(result);
+      });
+    } else init(result);
+  });
 }
 
 function createGotoMenu(scheme, url) {
   browser.contextMenus.create({
     id: 'contextGoto',
-    title: `Go to: "${scheme}${url}"`,
-    contexts: ['selection', 'link'],
-    onclick: function () {
+    title: `${browser.i18n.getMessage('goTo')}: "${scheme}${url}"`,
+    contexts: ['selection', 'link', 'editable'],
+    onclick() {
       browser.tabs.create({
-        url: `${scheme}${url}`
-      })
-    }
-  })
+        url: `${scheme}${url}`,
+      });
+    },
+  });
 }
 function updateGotoMenu(scheme, url) {
   browser.contextMenus.update('contextGoto', {
-    title: `Go to: "${scheme}${url}"`,
-    contexts: ['selection', 'link'],
-    onclick: function () {
+    title: `${browser.i18n.getMessage('goTo')}: "${scheme}${url}"`,
+    contexts: ['selection', 'link', 'editable'],
+    onclick() {
       browser.tabs.create({
-        url: `${scheme}${url}`
-      })
-    }
-  })
+        url: `${scheme}${url}`,
+      });
+    },
+  });
 }
 
-function init() {
-  browser.storage.local.get(null, function (result) {
-    const currentProvider = result.providers[result.currentProvider]
+function updateLocals(settings) {
+  const keys = Object.keys(settings);
+  const { length } = keys;
 
-    browser.contextMenus.create({ // TODO Refactor move function outside
-      id: 'contextSearch',
-      title: `Search with ${currentProvider.name}: "%s"`,
-      contexts: ['selection'],
-      onclick: function (event) {
-        const query = event.selectionText.trim().replace(/\s/gi, '+');
-        browser.storage.local.get(null, function (result) {
+  for (let i = 0; i < length; i += 1) {
+    window.contextMenuSearchLocals[keys[i]] = settings[keys[i]].newValue;
+  }
+}
+
+function onStorageChange(changes) {
+  const locals = window.contextMenuSearchLocals;
+  const { lastMsg } = locals;
+
+  locals.lastMsg += 'changed';
+  // TODO think to remove eslint ignore comments
+  delete changes.providers;// eslint-disable-line
+
+  if (changes.currentProvider) {
+    browser.storage.local.get('providers', (res) => {
+      changes.currentProvider = { newValue: res.providers[changes.currentProvider.newValue] };// eslint-disable-line
+      updateLocals(changes);
+      handleMessage(lastMsg);
+    });
+  } else {
+    updateLocals(changes);
+    handleMessage(lastMsg);
+  }
+}
+
+function handleMessage(msg) {
+  const locals = window.contextMenuSearchLocals;
+
+  if (locals.lastMsg !== msg) {
+    locals.lastMsg = msg;
+    const {
+      defaultProtocol,
+      // TODO (!) add setting and new var urlDetected
+      urlDetected,
+      currentProvider,
+    } = locals;
+
+    if (msg) {
+      // TODO move url detection outside
+      const urlWithSchemeRegexp = /^(?:[a-z]+:)(?:\/\/)?(?:(?:\S+(?::\S*)?@)?(?:(?:[a-z]+[a-z\d-]*(?:\.[a-z]+[a-z\d-]*)+)|(?:\d{1,3}(?:\.\d{1,3}){3}))(?::\d+)?)?(?:(?:\/[^/\s#?]+)+\/?|\/)?(?:\?[^#\s]*)?(?:#[^\s]*)?$/gi;
+      const urlWithHostnameRegexp = /^(?:(?:\S+(?::\S*)?@)?(?:(?:[a-z]+[a-z\d-]*(?:\.[a-z]+[a-z\d-]*)+)|(?:\d{1,3}(?:\.\d{1,3}){3}))(?::\d+)?)(?:(?:\/[^/\s#?]+)+\/?|\/)?(?:\?[^#\s]*)?(?:#[^\s]*)?$/gi;
+      const msgForTest = msg.trim().toLowerCase();
+
+      browser.contextMenus.update('contextSearch', { // TODO Refactor move function outsides
+        title: `${browser.i18n.getMessage('searchWith')} ${currentProvider.name}: ${msg}`,
+        contexts: ['selection', 'link', 'editable'],
+        onclick() {
+          const query = encodeURIComponent(msg);
           browser.tabs.create({
-            url: `${result.providers[result.currentProvider].url}${query}`
-          })
-        })
+            url: `${currentProvider.url}${query}`,
+          });
+        },
+      });
+
+      if (urlWithSchemeRegexp.test(msgForTest)) {
+        if (urlDetected) {
+          updateGotoMenu('', msgForTest);
+        } else {
+          createGotoMenu('', msgForTest);
+          locals.urlDetected = true;
+        }
+      } else if (urlWithHostnameRegexp.test(msgForTest)) {
+        if (urlDetected) {
+          updateGotoMenu(defaultProtocol, msgForTest);
+        } else {
+          createGotoMenu(defaultProtocol, msgForTest);
+          locals.urlDetected = true;
+        }
+      } else if (locals.urlDetected) {
+        browser.contextMenus.remove('contextGoto');
+        locals.urlDetected = false;
       }
-    })
-  })
+    } else {
+      browser.contextMenus.update('contextSearch', {
+        contexts: ['selection'],
+      });
+      if (urlDetected) {
+        browser.contextMenus.remove('contextGoto');
+        locals.urlDetected = false;
+      }
+    }
+  }
 }
 
 if (!window.browser) window.browser = chrome; // Compatibility for Chrome
 
-browser.runtime.onMessage.addListener(function (msg) {
-  if (msg) {
-    browser.storage.local.get(null, function (result) {
-      const currentProvider = result.providers[result.currentProvider];
+browser.runtime.onMessage.addListener(handleMessage);
+browser.storage.onChanged.addListener(onStorageChange);
 
-      const isGotoEnabled = result.gotoEnabled;
-
-      const urlWithSchemeRegexp = /^(?:[a-z]+:)(?:\/\/)?(?:(?:\S+(?::\S*)?@)?(?:(?:[a-z]+[a-z\d-]*(?:\.[a-z]+[a-z\d-]*)+)|(?:\d{1,3}(?:\.\d{1,3}){3}))(?::\d+)?)?(?:(?:\/[^\/\s#?]+)+\/?|\/)?(?:\?[^#\s]*)?(?:#[^\s]*)?$/gi;
-      const urlWithHostnameRegexp = /^(?:(?:\S+(?::\S*)?@)?(?:(?:[a-z]+[a-z\d-]*(?:\.[a-z]+[a-z\d-]*)+)|(?:\d{1,3}(?:\.\d{1,3}){3}))(?::\d+)?)(?:(?:\/[^\/\s#?]+)+\/?|\/)?(?:\?[^#\s]*)?(?:#[^\s]*)?$/gi;
-      const msgForTest = msg.trim().toLowerCase();
-
-      browser.contextMenus.update('contextSearch', { // TODO Refactor move function outsides
-        title: `Search with ${currentProvider.name}: ${msg}`,
-        contexts: ['selection', 'link'],
-        onclick: (event) => {
-          const query = msg.trim().replace(/\s/gi, '+');
-          browser.storage.local.get(null, function (result) {
-            browser.tabs.create({
-              url: `${result.providers[result.currentProvider].url}${query}`
-            })
-          })
-        }
-      })
-
-      if (urlWithSchemeRegexp.test(msgForTest)) {
-        if (isGotoEnabled)
-          updateGotoMenu('', msgForTest)
-        else {
-          createGotoMenu('', msgForTest);
-          browser.storage.local.set({ gotoEnabled: true });
-        }
-      } else if (urlWithHostnameRegexp.test(msgForTest)) {
-        if (isGotoEnabled) {
-          // TODO use default scheme from settings
-          updateGotoMenu('https://', msgForTest)
-        } else {
-          createGotoMenu('https://', msgForTest);
-          browser.storage.local.set({ gotoEnabled: true });
-        }
-      } else {
-        browser.contextMenus.remove('contextGoto')
-        browser.storage.local.set({ gotoEnabled: false });
-      }
-    })
-  } else {
-    browser.contextMenus.update('contextSearch', {
-      contexts: ['selection']
-    })
-  }
-})
-
-setDefaultProviders();
+setDefaultStoreValues();
