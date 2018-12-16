@@ -1,69 +1,3 @@
-function init(initSettings) {
-  const settings = initSettings || {};
-
-  // TODO use constant for name
-  window.contextMenuSearchLocals = {
-    currentProvider: settings.providers[settings.currentProvider],
-    defaultProtocol: settings.defaultProtocol,
-    urlDetected: false,
-  };
-
-  const locals = window.contextMenuSearchLocals;
-
-  browser.contextMenus.create({ // TODO Refactor move function outside
-    id: 'contextSearch',
-    title: `${browser.i18n.getMessage('searchWith')} ${locals.currentProvider.name}: "%s"`,
-    contexts: ['selection'],
-    onclick(event) {
-      const query = event.selectionText.trim().replace(/\s/gi, '+');
-
-      browser.tabs.create({
-        url: `${locals.currentProvider.url}${query}`,
-      });
-    },
-  });
-}
-
-function setDefaultStoreValues() {
-  browser.storage.local.get(null, (res) => {
-    const result = res;
-    let shouldUpdate;
-
-    if (!result.providers) {
-      shouldUpdate = true;
-      result.providers = {
-        // TODO refactor string constants; move list of default providers to external module?
-        google: {
-          name: 'Google',
-          url: 'https://www.google.com/search?q=',
-        },
-        yandex: {
-          name: 'Yandex',
-          url: 'https://www.yandex.ru/search/?text=',
-        },
-        bing: {
-          name: 'Bing',
-          url: 'http://www.bing.com/search?q=',
-        },
-      };
-    }
-    if (!result.currentProvider) {
-      shouldUpdate = true;
-      result.currentProvider = 'google';
-    }
-    if (!result.defaultProtocol) {
-      shouldUpdate = true;
-      result.defaultProtocol = 'https://';
-    }
-
-    if (shouldUpdate) {
-      browser.storage.local.set(result, () => {
-        init(result);
-      });
-    } else init(result);
-  });
-}
-
 function createGotoMenu(scheme, url) {
   browser.contextMenus.create({
     id: 'contextGoto',
@@ -94,26 +28,6 @@ function updateLocals(settings) {
 
   for (let i = 0; i < length; i += 1) {
     window.contextMenuSearchLocals[keys[i]] = settings[keys[i]].newValue;
-  }
-}
-
-function onStorageChange(changes) {
-  const locals = window.contextMenuSearchLocals;
-  const { lastMsg } = locals;
-
-  locals.lastMsg += 'changed';
-  // TODO think to remove eslint ignore comments
-  delete changes.providers;// eslint-disable-line
-
-  if (changes.currentProvider) {
-    browser.storage.local.get('providers', (res) => {
-      changes.currentProvider = { newValue: res.providers[changes.currentProvider.newValue] };// eslint-disable-line
-      updateLocals(changes);
-      handleMessage(lastMsg);
-    });
-  } else {
-    updateLocals(changes);
-    handleMessage(lastMsg);
   }
 }
 
@@ -176,9 +90,96 @@ function handleMessage(msg) {
   }
 }
 
+function onStorageChange(changes) {
+  const locals = window.contextMenuSearchLocals;
+  const { lastMsg } = locals;
+
+  locals.lastMsg += 'changed';
+  // TODO think to remove eslint ignore comments
+  delete changes.providers;// eslint-disable-line
+
+  if (changes.currentProvider) {
+    browser.storage.local.get('providers', (res) => {
+      changes.currentProvider = { newValue: res.providers[changes.currentProvider.newValue] };// eslint-disable-line
+      updateLocals(changes);
+      handleMessage(lastMsg);
+    });
+  } else {
+    updateLocals(changes);
+    handleMessage(lastMsg);
+  }
+}
+
+function init(initSettings) {
+  const settings = initSettings || {};
+
+  // TODO use constant for name
+  window.contextMenuSearchLocals = {
+    currentProvider: settings.providers[settings.currentProvider],
+    defaultProtocol: settings.defaultProtocol,
+    urlDetected: false,
+  };
+
+  const locals = window.contextMenuSearchLocals;
+
+  browser.contextMenus.create({ // TODO Refactor move function outside
+    id: 'contextSearch',
+    title: `${browser.i18n.getMessage('searchWith')} ${locals.currentProvider.name}: "%s"`,
+    contexts: ['selection'],
+    onclick(event) {
+      const query = event.selectionText.trim().replace(/\s/gi, '+');
+
+      browser.tabs.create({
+        url: `${locals.currentProvider.url}${query}`,
+      });
+    },
+  }, () => {
+    browser.runtime.onMessage.addListener(handleMessage);
+    browser.storage.onChanged.addListener(onStorageChange);
+  });
+}
+
+function setDefaultStoreValues() {
+  browser.storage.local.get(null, (res) => {
+    const result = res;
+    let shouldUpdate;
+
+    if (!result.providers) {
+      shouldUpdate = true;
+      result.providers = {
+        // TODO refactor string constants; move list of default providers to external module?
+        google: {
+          name: 'Google',
+          url: 'https://www.google.com/search?q=',
+        },
+        yandex: {
+          name: 'Yandex',
+          url: 'https://www.yandex.ru/search/?text=',
+        },
+        bing: {
+          name: 'Bing',
+          url: 'http://www.bing.com/search?q=',
+        },
+      };
+    }
+    if (!result.currentProvider) {
+      shouldUpdate = true;
+      result.currentProvider = 'google';
+    }
+    if (!result.defaultProtocol) {
+      shouldUpdate = true;
+      result.defaultProtocol = 'https://';
+    }
+
+    if (shouldUpdate) {
+      browser.storage.local.set(result, () => {
+        init(result);
+      });
+    } else init(result);
+  });
+}
+
 if (!window.browser) window.browser = chrome; // Compatibility for Chrome
 
-browser.runtime.onMessage.addListener(handleMessage);
-browser.storage.onChanged.addListener(onStorageChange);
-
 setDefaultStoreValues();
+
