@@ -11,9 +11,15 @@
     <h1>Search'in extension's options</h1>
 
     <h2>Search</h2>
-    <label for="searchprovider">Search provider</label>
-    <select name="searchprovider" id="searchprovider" title="select search provider"></select>
-
+    <p>
+        <input type="checkbox" name="silent" id="silent">
+        <label for="silent">Open search tab silently</label>
+    </p>
+    <p>
+        <label for="searchprovider">Search provider</label>
+        <select name="searchprovider" id="searchprovider" title="select search provider"></select>
+    </p>
+    
     <h3 style="margin-bottom: 0">Add custom provider</h3>
     <small>You can add any search engine with query URL</small>
     <br />
@@ -35,11 +41,13 @@
     <button id="resetbutton" type="button">Reset to defaults</button>
 
     <h2>Goto menu item</h2>
-    <label for="protocol">Default protocol</label>
-    <select name="protocol" id="protocol" title="select default protocol">
-        <option value="https://">https://</option>
-        <option value="http://">http://</option>
-    </select>
+    <p>
+        <label for="protocol">Default protocol</label>
+        <select name="protocol" id="protocol" title="select default protocol">
+            <option value="https://">https://</option>
+            <option value="http://">http://</option>
+        </select>
+    </p>
 </body>
 
 </html>

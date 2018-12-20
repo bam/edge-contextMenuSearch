@@ -1,4 +1,6 @@
-function createGotoMenu(scheme, url) {
+function createGotoMenu(scheme, url, settings) {
+  const opts = settings || {};
+
   browser.contextMenus.create({
     id: 'contextGoto',
     title: `${browser.i18n.getMessage('goTo')}: "${scheme}${url}"`,
@@ -6,17 +8,21 @@ function createGotoMenu(scheme, url) {
     onclick() {
       browser.tabs.create({
         url: `${scheme}${url}`,
+        active: !opts.silent,
       });
     },
   });
 }
-function updateGotoMenu(scheme, url) {
+function updateGotoMenu(scheme, url, settings) {
+  const opts = settings || {};
+
   browser.contextMenus.update('contextGoto', {
     title: `${browser.i18n.getMessage('goTo')}: "${scheme}${url}"`,
     contexts: ['selection', 'link', 'editable'],
     onclick() {
       browser.tabs.create({
         url: `${scheme}${url}`,
+        active: !opts.silent,
       });
     },
   });
@@ -41,6 +47,7 @@ function handleMessage(msg) {
       // TODO (!) add setting and new var urlDetected
       urlDetected,
       currentProvider,
+      silent,
     } = locals;
 
     if (msg) {
@@ -56,22 +63,23 @@ function handleMessage(msg) {
           const query = encodeURIComponent(msg);
           browser.tabs.create({
             url: `${currentProvider.url}${query}`,
+            active: !silent,
           });
         },
       });
 
       if (urlWithSchemeRegexp.test(msgForTest)) {
         if (urlDetected) {
-          updateGotoMenu('', msgForTest);
+          updateGotoMenu('', msgForTest, { silent });
         } else {
-          createGotoMenu('', msgForTest);
+          createGotoMenu('', msgForTest, { silent });
           locals.urlDetected = true;
         }
       } else if (urlWithHostnameRegexp.test(msgForTest)) {
         if (urlDetected) {
-          updateGotoMenu(defaultProtocol, msgForTest);
+          updateGotoMenu(defaultProtocol, msgForTest, { silent });
         } else {
-          createGotoMenu(defaultProtocol, msgForTest);
+          createGotoMenu(defaultProtocol, msgForTest, { silent });
           locals.urlDetected = true;
         }
       } else if (locals.urlDetected) {
@@ -117,6 +125,7 @@ function init(initSettings) {
   window.contextMenuSearchLocals = {
     currentProvider: settings.providers[settings.currentProvider],
     defaultProtocol: settings.defaultProtocol,
+    silent: settings.silent,
     urlDetected: false,
   };
 
@@ -131,6 +140,7 @@ function init(initSettings) {
 
       browser.tabs.create({
         url: `${locals.currentProvider.url}${query}`,
+        active: !locals.silent,
       });
     },
   }, () => {
@@ -170,6 +180,10 @@ function setDefaultStoreValues() {
       shouldUpdate = true;
       result.defaultProtocol = 'https://';
     }
+    if (!result.silent) {
+      shouldUpdate = true;
+      result.silent = false;
+    }
 
     if (shouldUpdate) {
       browser.storage.local.set(result, () => {
@@ -182,4 +196,3 @@ function setDefaultStoreValues() {
 if (!window.browser) window.browser = chrome; // Compatibility for Chrome
 
 setDefaultStoreValues();
-

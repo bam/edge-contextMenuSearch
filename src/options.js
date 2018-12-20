@@ -115,6 +115,17 @@ function initProtocol(protocol) {
   select.addEventListener('change', changeProtocol);
 }
 
+function changeSilent() {
+  browser.storage.local.set({ silent: this.checked });
+}
+
+function initSilent(isSilent) {
+  const checkbox = document.getElementById('silent');
+
+  checkbox.checked = isSilent;
+  checkbox.addEventListener('change', changeSilent);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   browser.storage.local.get(null, (result) => {
     const providersListEl = document.getElementById('providerslist');
@@ -127,5 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('resetbutton').addEventListener('click', resetCustomProviders);
 
     initProtocol(result.defaultProtocol);
+
+    initSilent(result.silent);
   });
 });

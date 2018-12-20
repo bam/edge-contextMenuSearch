@@ -42,10 +42,24 @@ function initProtocol(protocol) {
   select.addEventListener('change', changeProtocol);
 }
 
+function changeSilent() {
+  browser.storage.local.set({ silent: this.checked });
+}
+
+function initSilent(isSilent) {
+  const checkbox = document.getElementById('silent');
+
+  checkbox.checked = isSilent;
+  checkbox.addEventListener('change', changeSilent);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   browser.storage.local.get(null, (result) => {
     initSelect(result.providers, result.currentProvider);
     document.getElementById('searchprovider').addEventListener('change', changeProvider);
+
     initProtocol(result.defaultProtocol);
+
+    initSilent(result.silent);
   });
 });
