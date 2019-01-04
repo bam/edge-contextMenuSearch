@@ -10,6 +10,29 @@
 <body style="font-family: Segoe UI, sans-serif">
     <h1>Search'in extension's options</h1>
 
+    <h2>General options</h2>
+    <div style="display: inline-block; vertical-align: top">Menu mode:</div>
+    <div style="display: inline-block">
+        <form id="searchmode">
+            <div>
+                <input type="radio" name="mode" id="mode1" value="1">
+                <label for="mode1">Search only</label>
+            </div>
+            <div>
+                <input type="radio" name="mode" id="mode2" value="2">
+                <label for="mode2">Goto only</label>
+            </div>
+            <div>
+                <input type="radio" name="mode" id="mode3" value="3">
+                <label for="mode3">Both</label>
+            </div>
+            <div>
+                <input type="radio" name="mode" id="mode4" value="4">
+                <label for="mode4">Goto priority <small>(if URL is detected Search item won't be shown.)</small></label>
+            </div>
+        </form>
+    </div>
+
     <h2>Search</h2>
     <p>
         <input type="checkbox" name="silent" id="silent">
@@ -19,7 +42,7 @@
         <label for="searchprovider">Search provider</label>
         <select name="searchprovider" id="searchprovider" title="select search provider"></select>
     </p>
-    
+
     <h3 style="margin-bottom: 0">Add custom provider</h3>
     <small>You can add any search engine with query URL</small>
     <br />
@@ -35,7 +58,8 @@
     <br />
     <div id=providerslist></div>
     <hr />
-    <small>Note: you cannot delete or edit single provider meanwhile. Reset to defaults will delete all custom providers.
+    <small>
+        Note: you cannot delete or edit single provider meanwhile. Reset to defaults will delete all custom providers.
     </small>
     <br />
     <button id="resetbutton" type="button">Reset to defaults</button>

@@ -1,3 +1,34 @@
+function createSearchMenu(msg, settings) {
+  const { currentProvider, silent } = settings || {};
+
+  browser.contextMenus.create({
+    id: 'contextSearch',
+    title: `${browser.i18n.getMessage('searchWith')} ${currentProvider.name}: ${msg}`,
+    contexts: ['selection', 'link', 'editable'],
+    onclick() {
+      const query = encodeURIComponent(msg);
+      browser.tabs.create({
+        url: `${currentProvider.url}${query}`,
+        active: !silent,
+      });
+    },
+  });
+}
+function updateSearchMenu(msg, settings) {
+  const { currentProvider = {}, silent } = settings || {};
+
+  browser.contextMenus.update('contextSearch', {
+    title: `${browser.i18n.getMessage('searchWith')} ${currentProvider.name}: ${msg}`,
+    onclick() {
+      const query = encodeURIComponent(msg);
+      browser.tabs.create({
+        url: `${currentProvider.url}${query}`,
+        active: !silent,
+      });
+    },
+  });
+}
+
 function createGotoMenu(scheme, url, settings) {
   const opts = settings || {};
 
@@ -43,10 +74,11 @@ function handleMessage(msg) {
   if (locals.lastMsg !== msg) {
     locals.lastMsg = msg;
     const {
-      defaultProtocol,
-      // TODO (!) add setting and new var urlDetected
-      urlDetected,
       currentProvider,
+      defaultProtocol,
+      gotoMenu,
+      mode,
+      searchMenu,
       silent,
     } = locals;
 
@@ -56,44 +88,43 @@ function handleMessage(msg) {
       const urlWithHostnameRegexp = /^(?:(?:\S+(?::\S*)?@)?(?:(?:[a-z]+[a-z\d-]*(?:\.[a-z]+[a-z\d-]*)+)|(?:\d{1,3}(?:\.\d{1,3}){3}))(?::\d+)?)(?:(?:\/[^/\s#?]+)+\/?|\/)?(?:\?[^#\s]*)?(?:#[^\s]*)?$/gi;
       const msgForTest = msg.trim().toLowerCase();
 
-      browser.contextMenus.update('contextSearch', { // TODO Refactor move function outsides
-        title: `${browser.i18n.getMessage('searchWith')} ${currentProvider.name}: ${msg}`,
-        contexts: ['selection', 'link', 'editable'],
-        onclick() {
-          const query = encodeURIComponent(msg);
-          browser.tabs.create({
-            url: `${currentProvider.url}${query}`,
-            active: !silent,
-          });
-        },
-      });
+      let urlDetected = false;
+      let protocol = defaultProtocol;
 
       if (urlWithSchemeRegexp.test(msgForTest)) {
-        if (urlDetected) {
-          updateGotoMenu('', msgForTest, { silent });
-        } else {
-          createGotoMenu('', msgForTest, { silent });
-          locals.urlDetected = true;
-        }
+        urlDetected = true;
+        protocol = '';
       } else if (urlWithHostnameRegexp.test(msgForTest)) {
-        if (urlDetected) {
-          updateGotoMenu(defaultProtocol, msgForTest, { silent });
+        urlDetected = true;
+      }
+
+      if (mode === '3' || (mode === '4' && !urlDetected) || mode === '1') {
+        if (searchMenu) {
+          updateSearchMenu(msg, { currentProvider, silent });
         } else {
-          createGotoMenu(defaultProtocol, msgForTest, { silent });
-          locals.urlDetected = true;
+          createSearchMenu(msg, { currentProvider, silent });
+          locals.searchMenu = true;
         }
-      } else if (locals.urlDetected) {
+      } else if (searchMenu) {
+        browser.contextMenus.remove('contextSearch');
+        locals.searchMenu = false;
+      }
+
+      if (mode !== '1' && urlDetected) {
+        if (gotoMenu) {
+          updateGotoMenu(protocol, msgForTest, { silent });
+        } else {
+          createGotoMenu(protocol, msgForTest, { silent });
+          locals.gotoMenu = true;
+        }
+      } else if (gotoMenu) {
         browser.contextMenus.remove('contextGoto');
-        locals.urlDetected = false;
+        locals.gotoMenu = false;
       }
     } else {
-      browser.contextMenus.update('contextSearch', {
-        contexts: ['selection'],
-      });
-      if (urlDetected) {
-        browser.contextMenus.remove('contextGoto');
-        locals.urlDetected = false;
-      }
+      browser.contextMenus.removeAll();
+      locals.gotoMenu = false;
+      locals.searchMenu = false;
     }
   }
 }
@@ -102,7 +133,7 @@ function onStorageChange(changes) {
   const locals = window.contextMenuSearchLocals;
   const { lastMsg } = locals;
 
-  locals.lastMsg += 'changed';
+  locals.lastMsg += 'changed'; // 'hack' to force update context menus (in handleMessage()) after settings changing
   // TODO think to remove eslint ignore comments
   delete changes.providers;// eslint-disable-line
 
@@ -126,27 +157,13 @@ function init(initSettings) {
     currentProvider: settings.providers[settings.currentProvider],
     defaultProtocol: settings.defaultProtocol,
     silent: settings.silent,
-    urlDetected: false,
+    mode: settings.mode,
+    searchMenu: false,
+    gotoMenu: false,
   };
 
-  const locals = window.contextMenuSearchLocals;
-
-  browser.contextMenus.create({ // TODO Refactor move function outside
-    id: 'contextSearch',
-    title: `${browser.i18n.getMessage('searchWith')} ${locals.currentProvider.name}: "%s"`,
-    contexts: ['selection'],
-    onclick(event) {
-      const query = event.selectionText.trim().replace(/\s/gi, '+');
-
-      browser.tabs.create({
-        url: `${locals.currentProvider.url}${query}`,
-        active: !locals.silent,
-      });
-    },
-  }, () => {
-    browser.runtime.onMessage.addListener(handleMessage);
-    browser.storage.onChanged.addListener(onStorageChange);
-  });
+  browser.runtime.onMessage.addListener(handleMessage);
+  browser.storage.onChanged.addListener(onStorageChange);
 }
 
 function setDefaultStoreValues() {
@@ -183,6 +200,10 @@ function setDefaultStoreValues() {
     if (!result.silent) {
       shouldUpdate = true;
       result.silent = false;
+    }
+    if (!result.mode) {
+      shouldUpdate = true;
+      result.mode = '3';
     }
 
     if (shouldUpdate) {

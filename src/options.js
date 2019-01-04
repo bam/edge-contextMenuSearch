@@ -45,23 +45,13 @@ function resetCustomProviders() {
       document.getElementById('searchprovider').innerText = '';
       // TODO current provider global(external) constant
       initSelect(providers, 'google');
-      browser.contextMenus.update('contextSearch', {
-        title: `${browser.i18n.getMessage('searchWith')} ${providers.google.name}: "%s"`,
-      });
     });
   });
 }
 
+// TODO refactor replace with universal function setInStore(storageKey, elementKey, [callback])
 function changeProvider() {
-  browser.storage.local.set({ currentProvider: this.value }, () => {
-    browser.storage.local.get('providers', (result) => {
-      const currentProvider = result.providers[this.value];
-
-      browser.contextMenus.update('contextSearch', {
-        title: `${browser.i18n.getMessage('searchWith')} ${currentProvider.name}: "%s"`,
-      });
-    });
-  });
+  browser.storage.local.set({ currentProvider: this.value });
 }
 
 function loadCustomProvidersList(list, container) {
@@ -126,6 +116,25 @@ function initSilent(isSilent) {
   checkbox.addEventListener('change', changeSilent);
 }
 
+function changeMode() {
+  browser.storage.local.set({ mode: this.value });
+}
+
+function initMode(mode) {
+  const group = document.getElementsByName('mode');
+
+  for (let i = 0; i < group.length; i += 1) {
+    const element = group[i];
+
+    if (element.getAttribute('value') === mode) {
+      element.setAttribute('checked', '');
+    } else {
+      element.removeAttribute('checked');
+    }
+    element.addEventListener('change', changeMode);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   browser.storage.local.get(null, (result) => {
     const providersListEl = document.getElementById('providerslist');
@@ -140,5 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initProtocol(result.defaultProtocol);
 
     initSilent(result.silent);
+
+    initMode(result.mode);
   });
 });
