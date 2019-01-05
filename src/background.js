@@ -121,6 +121,12 @@ function handleMessage(msg) {
         browser.contextMenus.remove('contextGoto');
         locals.gotoMenu = false;
       }
+
+      if (locals.searchMenu && locals.gotoMenu) {
+        browser.contextMenus.update('contextSearch', {
+          title: `${currentProvider.name}: ${msg}`,
+        });
+      }
     } else {
       browser.contextMenus.removeAll();
       locals.gotoMenu = false;
