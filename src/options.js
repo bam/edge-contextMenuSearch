@@ -122,14 +122,15 @@ function changeMode() {
 
 function initMode(mode) {
   const group = document.getElementsByName('mode');
+  const { length } = group;
 
-  for (let i = 0; i < group.length; i += 1) {
+  for (let i = 0; i < length; i += 1) {
     const element = group[i];
 
-    if (element.getAttribute('value') === mode) {
-      element.setAttribute('checked', '');
+    if (element.value === mode) {
+      element.checked = true;
     } else {
-      element.removeAttribute('checked');
+      element.checked = false;
     }
     element.addEventListener('change', changeMode);
   }
