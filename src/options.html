@@ -39,8 +39,16 @@
         <label for="silent">Open search tab silently</label>
     </p>
     <p>
-        <label for="searchprovider">Search provider</label>
-        <select name="searchprovider" id="searchprovider" title="select search provider"></select>
+        <input type="checkbox" name="multisearch" id="multisearch">
+        <label for="multisearch">Use multiple search providers</label>
+        <br />
+        <small>Show multiple context menu items with chosen search providers</small>
+    </p>
+    <p>
+        <label for="searchprovider" style="vertical-align: top">Search provider</label>
+        <select name="searchprovider" id="searchprovider" title="select search provider" multiple></select>
+        <small id="providervalidity" style="display: none; color: red">You haven't selected provider!</small>
+        <small id="providernote" style="display: block">Use <i>Ctrl</i> or <i>Shift</i> to select multiple options</small>
     </p>
 
     <h3 style="margin-bottom: 0">Add custom provider</h3>
