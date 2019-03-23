@@ -4,7 +4,8 @@
         "browser": true,
         "window": true,
         "chrome": true,
-        "document": true
+        "document": true,
+        "Event": true
     },
     "rules": {
         "linebreak-style": "off",

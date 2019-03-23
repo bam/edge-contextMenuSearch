@@ -1,6 +1,6 @@
 {
   "name": "edge-contextmenusearch",
-  "version": "1.2.0",
+  "version": "1.3.1",
   "description": "Extension for Microsoft Edge browser to add context menu item for search for the selected text.",
   "main": "src/background.js",
   "scripts": {
