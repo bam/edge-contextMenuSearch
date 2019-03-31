@@ -122,6 +122,13 @@ document.addEventListener('DOMContentLoaded', () => {
     initMultisearch(result.multisearch);
     initNote(result.multisearch);
   });
+
+  document.getElementById('allOptionsLink').addEventListener('click', () => {
+    browser.tabs.create({
+      active: true,
+      url: 'src/options.html',
+    });
+  });
 });
 
 browser.runtime.connect({ name: 'popup' });

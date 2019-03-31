@@ -48,7 +48,9 @@
         <label for="searchprovider" style="vertical-align: top">Search provider</label>
         <select name="searchprovider" id="searchprovider" title="select search provider" multiple></select>
         <small id="providervalidity" style="display: none; color: red">You haven't selected provider!</small>
-        <small id="providernote" style="display: block">Use <i>Ctrl</i> or <i>Shift</i> to select multiple options</small>
+        <small id="providernote" style="display: block">
+            Use <i>Ctrl</i> or <i>Shift</i> to select multiple options
+        </small>
     </p>
 
     <h3 style="margin-bottom: 0">Add custom provider</h3>
@@ -63,8 +65,9 @@
         <input type="text" id="querystring" title="type query string" />
         <button form="newprovider" id="addbutton" type="button">Add</button>
     </form>
-    <br />
+    <h4>Added providers:</h4>
     <div id=providerslist></div>
+    <br />
     <hr />
     <small>
         Note: you cannot delete or edit single provider meanwhile. Reset to defaults will delete all custom providers.

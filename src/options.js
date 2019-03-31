@@ -80,11 +80,6 @@ function changeProvider() {
 function loadCustomProvidersList(list, container) {
   const listArray = Object.keys(list);
 
-  if (listArray.length > 0) {
-    const header = document.createElement('h4');
-    header.innerText = 'Added providers:';
-    container.appendChild(header);
-  }
   listArray.forEach((v) => {
     const provider = list[v];
 
