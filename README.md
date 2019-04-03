@@ -2,7 +2,7 @@
 
 This is an extension for Microsoft Edge browser.
 
-<a href='https://www.microsoft.com/store/apps/9NZ9THH1RS1X?cid=badgeGithub&ocid=badge'><img src='https://assets.windowsphone.com/85864462-9c82-451e-9355-a3d5f874397a/English_get-it-from-MS_InvariantCulture_Default.png' alt='English badge' style='width: 284px; height: 104px;'/></a>
+<a href='https://www.microsoft.com/store/apps/9NZ9THH1RS1X?cid=badgeGithub&ocid=badge'><img src='https://assets.windowsphone.com/85864462-9c82-451e-9355-a3d5f874397a/English_get-it-from-MS_InvariantCulture_Default.png' alt='English badge' width='284' height='104' /></a>
 
 Search'in adds context menu item for the selected text on the page and provides an ability to search this text with chosen search engine.
 
