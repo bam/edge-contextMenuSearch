@@ -10,9 +10,48 @@
 <body style="font-family: Segoe UI, sans-serif">
     <h1>Search'in extension's options</h1>
 
+    <h2>General options</h2>
+    <div style="display: inline-block; vertical-align: top">Menu mode</div>
+    <div style="display: inline-block">
+        <form id="searchmode">
+            <div>
+                <input type="radio" name="mode" id="mode1" value="1">
+                <label for="mode1">Search only</label>
+            </div>
+            <div>
+                <input type="radio" name="mode" id="mode2" value="2">
+                <label for="mode2">Goto only</label>
+            </div>
+            <div>
+                <input type="radio" name="mode" id="mode3" value="3">
+                <label for="mode3">Both</label>
+            </div>
+            <div>
+                <input type="radio" name="mode" id="mode4" value="4">
+                <label for="mode4">Goto priority <small>(if URL is detected Search item won't be shown.)</small></label>
+            </div>
+        </form>
+    </div>
+
     <h2>Search</h2>
-    <label for="searchprovider">Search provider</label>
-    <select name="searchprovider" id="searchprovider" title="select search provider"></select>
+    <p>
+        <input type="checkbox" name="silent" id="silent">
+        <label for="silent">Open search tab silently</label>
+    </p>
+    <p>
+        <input type="checkbox" name="multisearch" id="multisearch">
+        <label for="multisearch">Use multiple search providers</label>
+        <br />
+        <small>Show multiple context menu items with chosen search providers</small>
+    </p>
+    <p>
+        <label for="searchprovider" style="vertical-align: top">Search provider</label>
+        <select name="searchprovider" id="searchprovider" title="select search provider" multiple></select>
+        <small id="providervalidity" style="display: none; color: red">You haven't selected provider!</small>
+        <small id="providernote" style="display: block">
+            Use <i>Ctrl</i> or <i>Shift</i> to select multiple options
+        </small>
+    </p>
 
     <h3 style="margin-bottom: 0">Add custom provider</h3>
     <small>You can add any search engine with query URL</small>
@@ -26,20 +65,24 @@
         <input type="text" id="querystring" title="type query string" />
         <button form="newprovider" id="addbutton" type="button">Add</button>
     </form>
-    <br />
+    <h4>Added providers:</h4>
     <div id=providerslist></div>
+    <br />
     <hr />
-    <small>Note: you cannot delete or edit single provider meanwhile. Reset to defaults will delete all custom providers.
+    <small>
+        Note: you cannot delete or edit single provider meanwhile. Reset to defaults will delete all custom providers.
     </small>
     <br />
     <button id="resetbutton" type="button">Reset to defaults</button>
 
     <h2>Goto menu item</h2>
-    <label for="protocol">Default protocol</label>
-    <select name="protocol" id="protocol" title="select default protocol">
-        <option value="https://">https://</option>
-        <option value="http://">http://</option>
-    </select>
+    <p>
+        <label for="protocol">Default protocol</label>
+        <select name="protocol" id="protocol" title="select default protocol">
+            <option value="https://">https://</option>
+            <option value="http://">http://</option>
+        </select>
+    </p>
 </body>
 
 </html>

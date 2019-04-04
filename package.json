@@ -1,6 +1,6 @@
 {
   "name": "edge-contextmenusearch",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "description": "Extension for Microsoft Edge browser to add context menu item for search for the selected text.",
   "main": "src/background.js",
   "scripts": {
@@ -27,8 +27,8 @@
   },
   "homepage": "https://github.com/bam/edge-contextMenuSearch#readme",
   "devDependencies": {
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.12.0"
+    "eslint": "^5.10.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
   }
 }

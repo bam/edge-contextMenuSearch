@@ -1,4 +1,14 @@
 # Changelog
+## v1.4.0 (Apr 4, 2019)
+Next release, new features!  
+Multiple menu items for different search providers, new tabs could be opened silently without losing focus on current work, different menu modes to disable goto or search items.
+
+Added:
+- Open new tab silently
+- Multiple search providers menu items simultaneously
+- Different menu modes (only search, only goto, mixed)
+- Options page and help(wiki) page links on popup
+
 ## v1.3.1 (Dec 15, 2018)
 Major bug has been reported by statistics of crashes. 
 
